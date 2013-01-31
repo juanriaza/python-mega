@@ -4,7 +4,7 @@
 
 ## Overview
 
-Wrapper around the Mega API.
+Wrapper around the [Mega API](https://mega.co.nz/#developers). Based on the work of [Julien Marchand](http://julien-marchand.fr/blog/using-mega-api-with-python-examples/).
 
 ## Installation
 
