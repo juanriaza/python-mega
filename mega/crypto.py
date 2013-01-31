@@ -3,7 +3,7 @@ import json
 
 from Crypto.Cipher import AES
 
-from utils import a32_to_str, str_to_a32, a32_to_base64
+from .utils import a32_to_str, str_to_a32, a32_to_base64
 
 
 def aes_cbc_encrypt(data, key):
