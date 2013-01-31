@@ -46,6 +46,8 @@ files = m.get_files()
 m.download_file(file_id, file_key)
 # upload a file
 m.uploadfile('/home/kim/mega/secret_plans')
+# download from an url
+m.download_from_url('https://mega.co.nz/#!wYo3AYZC!Zwi1f3ANtYwKNOc07fwuN1enOoRj4CreFouuGqi4D6Y')
 ```
 
 ## Running the tests

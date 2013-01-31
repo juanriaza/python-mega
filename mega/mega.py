@@ -5,6 +5,7 @@ import random
 import binascii
 
 import requests
+from urlobject import URLObject
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
 from Crypto.Util import Counter
@@ -114,6 +115,11 @@ class Mega(object):
             elif file['t'] == 4:
                 self.trashbin_id = file['h']
         return files_data
+
+    def download_from_url(self, url):
+        url_object = URLObject(url)
+        file_id, file_key = url_object.fragment[1:].split('!')
+        self.download_file(file_id, file_key, public=True)
 
     def download_file(self, file_id, file_key, public=False):
         if public:
