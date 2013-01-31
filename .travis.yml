@@ -1,4 +1,8 @@
 language: python
+env:
+  global:
+    - secure: "SFpNG6AhSyHTaFFQvwjBjeyq+ozFFGRugWccbqv23NQkR3kXpmyqbx0v+Wz/\nBgsB3FCtHEnF0+KM6q6zPBDfqbJgLsu4ib2/Vienzjq4Nr5ZRunuQtYj67b+\nSDPP6w7Z2FmDq7Bgiy61QW4q2gBB1fRmWaeeLPu5R18TmVfT/fc="
+    - secure: "VJ2j+HdyxvZjLEXmYmV3TyGyUFEN2jZTyJJ+oNUedPe3G3tezGrcsmCXUEWU\nlNkN2Ciwh09iaN0GKxsETGWX2N9I1UDxOUgDjbjs5+q02rXDnWh3MSyJykoO\ngFW5XjaR605Tw2xK/uVZaNkr8pjeiaAzmjr0ojLjfTcELATTFR8="
 python:
   - "2.7"
   - "2.6"
