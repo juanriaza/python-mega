@@ -14,6 +14,7 @@ from .crypto import prepare_key, stringhash, encrypt_key, decrypt_key,\
     enc_attr, dec_attr, aes_cbc_encrypt_a32
 from .utils import a32_to_str, str_to_a32, a32_to_base64, base64_to_a32,\
     mpi2int, base64urlencode, base64urldecode, get_chunks
+from .exceptions import MegaRequestException
 
 
 class Mega(object):
@@ -40,8 +41,10 @@ class Mega(object):
             params.update({'sid': self.sid})
         data = json.dumps([data])
         req = requests.post('https://g.api.mega.co.nz/cs', params=params, data=data)
-        # TODO: error handling
-        return req.json()[0]
+        json_data = req.json()
+        if isinstance(json_data, int):
+            raise MegaRequestException(json_data)
+        return json_data[0]
 
     def login_user(self, email, password):
         password_aes = prepare_key(str_to_a32(password))
