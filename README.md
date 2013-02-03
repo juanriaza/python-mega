@@ -61,3 +61,8 @@ m.download_from_url('https://mega.co.nz/#!wYo3AYZC!Zwi1f3ANtYwKNOc07fwuN1enOoRj4
 **31th Jan 2012**
 
 * First release.
+
+## Acknowledgements
+
+- Many thanks to Julien Marchand for the initial work.
+- All of the [contributors](https://github.com/juanriaza/python-mega/blob/master/CONTRIBUTORS.md) to this project.
