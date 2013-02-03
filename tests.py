@@ -24,7 +24,7 @@ class TestMega(unittest.TestCase):
 
     def _test_upload_file(self, api):
         api.get_files()
-        api.uploadfile('tests.py') # inception
+        api.uploadfile('tests.py')  # inception
         files = api.get_files()
         uploaded = self._check_file_exists('tests.py', files)
         self.assertEqual(uploaded, True)

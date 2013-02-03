@@ -40,7 +40,8 @@ class Mega(object):
         if self.sid:
             params.update({'sid': self.sid})
         data = json.dumps([data])
-        req = requests.post('https://g.api.mega.co.nz/cs', params=params, data=data)
+        req = requests.post(
+            'https://g.api.mega.co.nz/cs', params=params, data=data)
         json_data = req.json()
         if isinstance(json_data, int):
             raise MegaRequestException(json_data)
@@ -58,9 +59,12 @@ class Mega(object):
         random_session_self_challenge = [random.randint(0, 0xFFFFFFFF)] * 4
         user_handle = self.api_req({
             'a': 'up',
-            'k': a32_to_base64(encrypt_key(random_master_key, random_password_key)),
+            'k': a32_to_base64(encrypt_key(random_master_key,
+                                           random_password_key)),
             'ts': base64urlencode(a32_to_str(random_session_self_challenge) +
-                                  a32_to_str(encrypt_key(random_session_self_challenge, random_master_key)))
+                                  a32_to_str(encrypt_key(
+                                      random_session_self_challenge,
+                                      random_master_key)))
         })
         res = self.api_req({'a': 'us', 'user': user_handle})
         self._login_common(res, random_password_key)
@@ -70,7 +74,8 @@ class Mega(object):
         self.master_key = decrypt_key(enc_master_key, password)
         if 'tsid' in res:
             tsid = base64urldecode(res['tsid'])
-            key_encrypted = a32_to_str(encrypt_key(str_to_a32(tsid[:16]), self.master_key))
+            key_encrypted = a32_to_str(
+                encrypt_key(str_to_a32(tsid[:16]), self.master_key))
             if key_encrypted == tsid[-16:]:
                 self.sid = res['tsid']
         elif 'csid' in res:
@@ -86,8 +91,12 @@ class Mega(object):
                 privk = privk[l:]
 
             enc_sid = mpi2int(base64urldecode(res['csid']))
-            decrypter = RSA.construct((self.rsa_priv_key[0] * self.rsa_priv_key[1], 0L,
-                                       self.rsa_priv_key[2], self.rsa_priv_key[0], self.rsa_priv_key[1]))
+            decrypter = RSA.construct(
+                (self.rsa_priv_key[0] * self.rsa_priv_key[1],
+                 0L,
+                 self.rsa_priv_key[2],
+                 self.rsa_priv_key[0],
+                 self.rsa_priv_key[1]))
             sid = '%x' % decrypter.key._decrypt(enc_sid)
             sid = binascii.unhexlify('0' + sid if len(sid) % 2 else sid)
             self.sid = base64urlencode(sid[:43])
@@ -100,7 +109,10 @@ class Mega(object):
                 key = decrypt_key(base64_to_a32(key), self.master_key)
                 # file
                 if file['t'] == 0:
-                    k = (key[0] ^ key[4], key[1] ^ key[5], key[2] ^ key[6], key[3] ^ key[7])
+                    k = (key[0] ^ key[4],
+                         key[1] ^ key[5],
+                         key[2] ^ key[6],
+                         key[3] ^ key[7])
                 # directory
                 else:
                     k = key
@@ -131,7 +143,10 @@ class Mega(object):
         else:
             file_data = self.api_req({'a': 'g', 'g': 1, 'n': file_id})
 
-        k = (file_key[0] ^ file_key[4], file_key[1] ^ file_key[5], file_key[2] ^ file_key[6], file_key[3] ^ file_key[7])
+        k = (file_key[0] ^ file_key[4],
+             file_key[1] ^ file_key[5],
+             file_key[2] ^ file_key[6],
+             file_key[3] ^ file_key[7])
         iv = file_key[4:6] + (0, 0)
         meta_mac = file_key[6:8]
 
@@ -141,12 +156,11 @@ class Mega(object):
         attributes = dec_attr(attributes, k)
         file_name = attributes['n']
 
-        # print "Downloading %s (size: %d), url = %s" % (file_name, file_size, file_url)
-
         infile = requests.get(file_url, stream=True).raw
         outfile = open(file_name, 'wb')
 
-        counter = Counter.new(128, initial_value = ((iv[0] << 32) + iv[1]) << 64)
+        counter = Counter.new(
+            128, initial_value=((iv[0] << 32) + iv[1]) << 64)
         decryptor = AES.new(a32_to_str(k), AES.MODE_CTR, counter=counter)
 
         file_mac = (0, 0, 0, 0)
@@ -197,8 +211,12 @@ class Mega(object):
         ul_url = self.api_req({'a': 'u', 's': size})['p']
 
         ul_key = [random.randint(0, 0xFFFFFFFF) for _ in xrange(6)]
-        counter = Counter.new(128, initial_value = ((ul_key[4] << 32) + ul_key[5]) << 64)
-        encryptor = AES.new(a32_to_str(ul_key[:4]), AES.MODE_CTR, counter=counter)
+        counter = Counter.new(
+            128, initial_value=((ul_key[4] << 32) + ul_key[5]) << 64)
+        encryptor = AES.new(
+            a32_to_str(ul_key[:4]),
+            AES.MODE_CTR,
+            counter=counter)
 
         file_mac = [0, 0, 0, 0]
         for chunk_start, chunk_size in sorted(get_chunks(size).items()):
@@ -239,5 +257,9 @@ class Mega(object):
                ul_key[4], ul_key[5],
                meta_mac[0], meta_mac[1]]
         encrypted_key = a32_to_base64(encrypt_key(key, self.master_key))
-        data = self.api_req({'a': 'p', 't': dst, 'n': [{'h': completion_handle, 't': 0, 'a': enc_attributes, 'k': encrypted_key}]})
+        data = self.api_req({'a': 'p', 't': dst, 'n': [
+            {'h': completion_handle,
+             't': 0,
+             'a': enc_attributes,
+             'k': encrypted_key}]})
         return data

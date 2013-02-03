@@ -9,24 +9,30 @@ from Crypto.Cipher import AES
 def a32_to_str(a):
     return struct.pack('>%dI' % len(a), *a)
 
+
 def aes_cbc_encrypt(data, key):
     encryptor = AES.new(key, AES.MODE_CBC, '\0' * 16)
     return encryptor.encrypt(data)
 
+
 def aes_cbc_encrypt_a32(data, key):
     return str_to_a32(aes_cbc_encrypt(a32_to_str(data), a32_to_str(key)))
 
+
 def str_to_a32(b):
-    if len(b) % 4: # Add padding, we need a string with a length multiple of 4
+    if len(b) % 4:  # Add padding, we need a string with a length multiple of 4
         b += '\0' * (4 - len(b) % 4)
     return struct.unpack('>%dI' % (len(b) / 4), b)
+
 
 def mpi2int(s):
     return int(binascii.hexlify(s[2:]), 16)
 
+
 def aes_cbc_decrypt(data, key):
     decryptor = AES.new(key, AES.MODE_CBC, '\0' * 16)
     return decryptor.decrypt(data)
+
 
 def aes_cbc_decrypt_a32(data, key):
     return str_to_a32(aes_cbc_decrypt(a32_to_str(data), a32_to_str(key)))
@@ -38,8 +44,10 @@ def base64urldecode(data):
         data = data.replace(search, replace)
     return base64.b64decode(data)
 
+
 def base64_to_a32(s):
     return str_to_a32(base64urldecode(s))
+
 
 def base64urlencode(data):
     data = base64.b64encode(data)
@@ -47,8 +55,10 @@ def base64urlencode(data):
         data = data.replace(search, replace)
     return data
 
+
 def a32_to_base64(a):
     return base64urlencode(a32_to_str(a))
+
 
 def get_chunks(size):
     chunks = {}
