@@ -14,7 +14,7 @@ from .crypto import prepare_key, stringhash, encrypt_key, decrypt_key,\
     enc_attr, dec_attr, aes_cbc_encrypt_a32
 from .utils import a32_to_str, str_to_a32, a32_to_base64, base64_to_a32,\
     mpi2int, base64urlencode, base64urldecode, get_chunks
-from .exceptions import MegaRequestException
+from .exceptions import MegaRequestException, MegaIncorrectPasswordExcetion
 
 
 class Mega(object):
@@ -70,6 +70,9 @@ class Mega(object):
         self._login_common(res, random_password_key)
 
     def _login_common(self, res, password):
+        if (res == -2) or (res == -9):
+            raise MegaIncorrectPasswordExcetion("Incorrect e-mail and/or password.")
+            
         enc_master_key = base64_to_a32(res['k'])
         self.master_key = decrypt_key(enc_master_key, password)
         if 'tsid' in res:
