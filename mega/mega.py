@@ -70,7 +70,7 @@ class Mega(object):
         self._login_common(res, random_password_key)
 
     def _login_common(self, res, password):
-        if (res == -2) or (res == -9):
+        if res in (-2, -9):
             raise MegaIncorrectPasswordExcetion("Incorrect e-mail and/or password.")
             
         enc_master_key = base64_to_a32(res['k'])

@@ -10,9 +10,9 @@ from mega.exceptions import MegaIncorrectPasswordExcetion
 class TestMega(unittest.TestCase):    
     def setUp(self):
         unittest.TestCase.setUp(self)
-        self._email = "matteo.kloiber@me.com";
-        self._password = "(b?3DYzaMUUG>4:24roG29ee23p)&h42@]9}j$4?4H..z)4<3C";
-        self.api_logged = Mega.from_credentials(self._email, self._password)
+        email = os.environ.get('MEGAEMAIL') or sys.argv[0]
+        password = os.environ.get('MEGAPASSWORD') or sys.argv[1]
+        self.api_logged = Mega.from_credentials(email, password)
         self.api_ephemeral = Mega.from_ephemeral()
 
     def _check_file_exists(self, file_name, files):
