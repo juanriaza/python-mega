@@ -245,7 +245,7 @@ class Mega(object):
 
             chunk = encryptor.encrypt(chunk)
             url = '%s/%s' % (ul_url, str(chunk_start))
-            outfile = requests.post(url, data=chunk).raw
+            outfile = requests.post(url, data=chunk, stream=True).raw
             completion_handle = outfile.read()
         infile.close()
 
