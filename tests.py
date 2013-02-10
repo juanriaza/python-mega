@@ -12,8 +12,6 @@ class TestMega(unittest.TestCase):
         unittest.TestCase.setUp(self)
         self.email = os.environ.get('MEGAEMAIL') or sys.argv[0]
         self.password = os.environ.get('MEGAPASSWORD') or sys.argv[1]
-        self.api_logged = Mega.from_credentials(self._email, self._password)
-        self.api_ephemeral = Mega.from_ephemeral()
 
     def _check_file_exists(self, file_name, files):
         uploaded = False
@@ -45,10 +43,10 @@ class TestMega(unittest.TestCase):
         Mega.from_credentials(self._email, self._password)
     
     def test_upload_file_logged(self):
-        self._test_upload_file(self.api_logged)
+        self._test_upload_file(Mega.from_credentials(self._email, self._password))
     
     def test_upload_file_ephemeral(self):
-        self._test_upload_file(self.api_ephemeral)
+        self._test_upload_file(Mega.from_ephemeral())
 
 if __name__ == '__main__':
     unittest.main()
